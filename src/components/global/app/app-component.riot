@@ -1,0 +1,94 @@
+<app-component>
+<button onclick={toggleForm}>Create</button>
+
+<display-component 
+todos={this.state.todos}
+handleDelete={handleDelete}
+select={selectTodoToUpdate}
+></display-component>
+
+<form-component 
+if={state.showForm}
+todo={state.todo}
+action={state.action}
+_id={state._id}
+handleCreate={handleCreate}
+handleUpdate={handleUpdate}
+></form-component>
+
+<script>
+export default {
+    state: {
+        url: "http://localhost:10000/todos",
+        todos: [],
+        todo: {
+            reminder: "",
+            completed: false
+        },
+        action: "create",
+        _id: "",
+        showForm: false
+    },
+    async onBeforeMount (){
+        this.getTodos()
+    },
+    async getTodos(){
+        const response = await fetch(this.state.url)
+        const data = await response.json()
+        this.state.todos = data
+        this.state.todo = {
+            reminder: "",
+            completed: false
+        }
+        this.state.action = "create"
+        this.state._id = ""
+        this.state.showForm = false
+        this.update()
+    },
+    toggleForm(){
+        this.state.showForm = !this.state.showForm
+        this.update()
+    },
+    async handleCreate(todo){
+        const response = await fetch(this.state.url, {
+            method: "post",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify(todo)
+        })
+
+        this.getTodos()
+    },
+        async handleUpdate(todo){
+        const response = await fetch(this.state.url+`/${todo._id}`, {
+            method: "put",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify(todo)
+        })
+
+        this.getTodos()
+    },
+            async handleDelete(todo){
+        const response = await fetch(this.state.url+`/${todo._id}`, {
+            method: "delete",
+        })
+
+        this.getTodos()
+    },
+    selectTodoToUpdate(todo){
+        this.state.todo = todo
+        this.state._id = todo._id
+        this.state.action = "update"
+        this.state.showForm = true
+        this.update()
+    }
+
+
+}
+
+</script>
+
+</app-component>

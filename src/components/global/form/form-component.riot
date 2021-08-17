@@ -1,0 +1,33 @@
+<form-component>
+
+<form onsubmit={handleSubmit}>
+<input type="text" value={props.todo.reminder}>
+<input type="checkbox" checked={props.todo.completed}>
+<input type="submit" value="submit">
+</form>
+
+<script>
+
+export default {
+    handleSubmit(event){
+        event.preventDefault()
+        console.log(this.props.action)
+        const reminder = this.$("input[type=text]").value
+        const completed = this.$("input[type=checkbox]").checked
+        const formResult = {reminder, completed}
+
+        if(this.props.action === "create"){
+            this.props.handleCreate(formResult)
+        }
+
+        if(this.props.action === "update"){
+            formResult._id = this.props._id
+            this.props.handleUpdate(formResult)
+        }
+
+    }
+}
+
+</script>
+
+</form-component>

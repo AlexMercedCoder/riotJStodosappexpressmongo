@@ -1,0 +1,18 @@
+<display-component>
+
+<ul>
+<li  each={todo in props.todos}>
+<h3 onclick={() => props.select(todo)}>{todo.reminder} - {todo.completed ? "O" : "X"}</h3>
+<button onclick={() =>  props.handleDelete(todo)}>delete</button>
+</li>
+</ul>
+
+<script>
+export default {
+    onBeforeMount(props, state){
+    }
+}
+
+</script>
+
+</display-component>
